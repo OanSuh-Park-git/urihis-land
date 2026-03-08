@@ -63,7 +63,7 @@ function exportCSV(subscribers: Subscriber[]) {
 const emptyForm = { category: CATEGORIES[0], title: "", summary: "", url: "", date: "", readTime: "" };
 
 export default function AdminPage() {
-  const { user, isAdmin, loading } = useAuth();
+  const { isAdmin, loading } = useAuth();
   const router = useRouter();
 
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);

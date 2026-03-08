@@ -89,14 +89,19 @@ export default function AdminPage() {
   useEffect(() => {
     if (!isAdmin) return;
     const fetchData = async () => {
-      const [subSnap, userSnap] = await Promise.all([
-        getDocs(query(collection(db, "subscribers"), orderBy("createdAt", "desc"))),
-        getDocs(query(collection(db, "users"), orderBy("lastLogin", "desc"))),
-      ]);
-      setSubscribers(subSnap.docs.map((d) => ({ id: d.id, ...d.data() } as Subscriber)));
-      setUsers(userSnap.docs.map((d) => ({ id: d.id, ...d.data() } as UserRecord)));
-      await loadArticles();
-      setFetching(false);
+      try {
+        const [subSnap, userSnap] = await Promise.all([
+          getDocs(query(collection(db, "subscribers"), orderBy("createdAt", "desc"))),
+          getDocs(query(collection(db, "users"), orderBy("lastLogin", "desc"))),
+        ]);
+        setSubscribers(subSnap.docs.map((d) => ({ id: d.id, ...d.data() } as Subscriber)));
+        setUsers(userSnap.docs.map((d) => ({ id: d.id, ...d.data() } as UserRecord)));
+        await loadArticles();
+      } catch (e) {
+        console.error("[Admin] Firestore fetch error:", e);
+      } finally {
+        setFetching(false);
+      }
     };
     fetchData();
   }, [isAdmin]);

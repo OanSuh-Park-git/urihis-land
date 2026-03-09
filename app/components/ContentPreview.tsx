@@ -179,7 +179,7 @@ export default function ContentPreview() {
         {/* More button */}
         <div className="text-center">
           <a
-            href="#subscribe"
+            href="/articles"
             className="inline-block font-sans text-sm text-primary border border-primary px-8 py-3 hover:bg-primary hover:text-parchment transition-all duration-300 tracking-widest"
           >
             전체 기사 보기 →

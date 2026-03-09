@@ -66,10 +66,13 @@ export default function ArticlesPage() {
     (async () => {
       try {
         const snap = await getDocs(query(collection(db, "articles"), orderBy("createdAt", "desc")));
-        const data = snap.docs
+        const firestoreData = snap.docs
           .map((d) => ({ id: d.id, ...d.data() } as Article))
           .filter((a) => a.status !== "archived");
-        if (data.length > 0) setArticles(data);
+        if (firestoreData.length > 0) {
+          // Firestore 기사를 앞에, 정적 기사(샘플)를 뒤에 합쳐서 표시
+          setArticles([...firestoreData, ...staticArticles]);
+        }
       } catch {
         // Firestore 불가 → 정적 기사 유지
       } finally {

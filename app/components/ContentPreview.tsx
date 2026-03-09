@@ -78,11 +78,14 @@ export default function ContentPreview() {
         const q = query(collection(db, "articles"), orderBy("createdAt", "desc"));
         const snap = await getDocs(q);
         if (!snap.empty) {
-          const data = snap.docs.map((d) => ({ id: d.id, ...d.data() } as Article));
-          setArticles(data);
+          // 보관된 기사(status === "archived") 제외
+          const data = snap.docs
+            .map((d) => ({ id: d.id, ...d.data() } as Article))
+            .filter((a) => (a as Article & { status?: string }).status !== "archived");
+          if (data.length > 0) setArticles(data);
         }
       } catch {
-        // Firestore unavailable — keep static articles
+        // Firestore 불가 → 정적 기사 유지
       }
     };
     load();

@@ -71,7 +71,7 @@ export default function Subscribe() {
           <br />
           삼일신고·천부경의 정신을 세계에 알리는 글들을 가장 먼저 받아보세요.
           <br />
-          구독 즉시 소책자 PDF를 무료로 드립니다.
+          등록하시면 새로운 소식을 늘 전달하겠습니다.
         </p>
 
         {submitted ? (

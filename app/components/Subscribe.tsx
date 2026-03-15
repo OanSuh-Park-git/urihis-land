@@ -11,6 +11,7 @@ import { useAuth } from "../lib/AuthContext";
 const schema = z.object({
   name: z.string().min(2, "이름은 2자 이상 입력해 주세요."),
   email: z.email("올바른 이메일 주소를 입력해 주세요."),
+  phone: z.string().optional(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -32,6 +33,7 @@ export default function Subscribe() {
       await addDoc(collection(db, "subscribers"), {
         name: data.name,
         email: data.email,
+        phone: data.phone ?? "",
         uid: user?.uid ?? null,
         createdAt: serverTimestamp(),
       });
@@ -130,6 +132,16 @@ export default function Subscribe() {
                     {errors.email.message}
                   </p>
                 )}
+              </div>
+
+              {/* Phone */}
+              <div className="flex-1">
+                <input
+                  {...register("phone")}
+                  type="tel"
+                  placeholder="전화번호 (선택)"
+                  className="w-full bg-transparent border border-parchment/30 px-4 py-3 text-parchment placeholder:text-parchment/40 font-sans text-sm focus:outline-none focus:border-secondary transition-colors duration-200"
+                />
               </div>
             </div>
 

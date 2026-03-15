@@ -14,6 +14,7 @@ interface Subscriber {
   id: string;
   name: string;
   email: string;
+  phone?: string;
   uid: string | null;
   createdAt: Timestamp | null;
 }
@@ -48,8 +49,8 @@ function fmt(ts: Timestamp | null) {
   });
 }
 function exportCSV(subs: Subscriber[]) {
-  const rows = subs.map((s) => `"${s.name}","${s.email}","${fmt(s.createdAt)}"`).join("\n");
-  const blob = new Blob(["\uFEFF이름,이메일,가입일\n" + rows], { type: "text/csv;charset=utf-8;" });
+  const rows = subs.map((s) => `"${s.name}","${s.email}","${s.phone ?? ""}","${fmt(s.createdAt)}"`).join("\n");
+  const blob = new Blob(["\uFEFF이름,이메일,전화번호,가입일\n" + rows], { type: "text/csv;charset=utf-8;" });
   const a = Object.assign(document.createElement("a"), {
     href: URL.createObjectURL(blob),
     download: `구독자_${new Date().toISOString().slice(0, 10)}.csv`,
@@ -311,18 +312,19 @@ export default function AdminPage() {
               <table className="w-full font-sans text-sm">
                 <thead>
                   <tr className="border-b border-parchment/10 bg-parchment/5">
-                    {["이름", "이메일", "가입일", "UID"].map((h) => (
+                    {["이름", "이메일", "전화번호", "가입일", "UID"].map((h) => (
                       <th key={h} className="text-left px-4 py-3 text-parchment/50 font-normal text-xs">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {subscribers.length === 0 ? (
-                    <tr><td colSpan={4} className="px-4 py-10 text-center text-parchment/30 text-xs">구독자가 없습니다.</td></tr>
+                    <tr><td colSpan={5} className="px-4 py-10 text-center text-parchment/30 text-xs">구독자가 없습니다.</td></tr>
                   ) : subscribers.map((s) => (
                     <tr key={s.id} className="border-b border-parchment/5 hover:bg-parchment/5">
                       <td className="px-4 py-3 text-parchment">{s.name}</td>
                       <td className="px-4 py-3 text-parchment/80">{s.email}</td>
+                      <td className="px-4 py-3 text-parchment/60 text-xs">{s.phone || "—"}</td>
                       <td className="px-4 py-3 text-parchment/50 text-xs">{fmt(s.createdAt)}</td>
                       <td className="px-4 py-3 text-parchment/30 text-xs font-mono truncate max-w-[120px]">
                         {s.uid ?? "비로그인"}
